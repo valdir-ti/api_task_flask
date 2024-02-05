@@ -10,14 +10,14 @@ def hello_world():
     })
 
 tasks = []
-task_id_control = 1
+global_id = 1
 
 #CREATE
 @app.route('/tasks', methods=['POST'])
-def create_task():
-    global task_id_control
+def create_task():    
+    global global_id
     data = request.get_json()
-    new_task = Task(id=task_id_control, title=data['title'], description=data.get("description", ""))
+    new_task = Task(id=global_id, title=data['title'], description=data.get("description", ""))
     tasks.append(new_task)
     print(tasks)
     return jsonify({
@@ -28,10 +28,10 @@ def create_task():
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
     '''
-    Option 1
-    task_list = []
-    for task in tasks:
-        task_list.append(task.to_dict())
+        Option 1
+        task_list = []
+        for task in tasks:
+            task_list.append(task.to_dict())
     '''
 
     task_list = [task.to_dict() for task in tasks]
@@ -43,10 +43,22 @@ def get_tasks():
     return jsonify(output)
 
 # READ - ID
+@app.route('/tasks/<int:id>', methods=['GET'])
+def get_task_by_id(id):
+    task = None
+    for t in tasks:
+        if t.id == id:
+            return jsonify(t.to_dict())
+    return jsonify({
+        'message': 'task not found'
+    }, 404)
 
 # UPDATE
 
 # DELETE
+        
+def generate_random_ids(num_ids, min_value=1, max_value=9999):
+    return [random.randint(min_value, max_value) for _ in range(num_ids)]
 
 
 if __name__ == '__main__':
