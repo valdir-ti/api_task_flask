@@ -24,11 +24,29 @@ def create_task():
         'message': 'Nova tarefa criada com sucesso'
     })
 
-#READ
+# READ
+@app.route('/tasks', methods=['GET'])
+def get_tasks():
+    '''
+    Option 1
+    task_list = []
+    for task in tasks:
+        task_list.append(task.to_dict())
+    '''
 
-#UPDATE
+    task_list = [task.to_dict() for task in tasks]
+    
+    output = {
+        "tasks": task_list,
+        "total_tasks": 0
+    }
+    return jsonify(output)
 
-#DELETE
+# READ - ID
+
+# UPDATE
+
+# DELETE
 
 
 if __name__ == '__main__':
