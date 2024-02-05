@@ -20,9 +20,7 @@ def create_task():
     new_task = Task(id=global_id, title=data['title'], description=data.get("description", ""))
     tasks.append(new_task)
     print(tasks)
-    return jsonify({
-        'message': 'Nova tarefa criada com sucesso'
-    })
+    return jsonify({'message': 'Nova tarefa criada com sucesso'})
 
 # READ
 @app.route('/tasks', methods=['GET'])
@@ -44,22 +42,31 @@ def get_tasks():
 
 # READ - ID
 @app.route('/tasks/<int:id>', methods=['GET'])
-def get_task_by_id(id):
-    task = None
+def get_task_by_id(id):    
     for t in tasks:
         if t.id == id:
             return jsonify(t.to_dict())
-    return jsonify({
-        'message': 'task not found'
-    }, 404)
+    return jsonify({'message': 'task not found'}, 404)
 
 # UPDATE
+@app.route('/tasks/<int:id>', methods=['PUT'])
+def update_task(id):
+    task = None
+    for t in tasks:
+        if t.id == id:
+            task = t
+    
+    if task == None:
+        return jsonify({'message': 'task not found'}, 404)
+    
+    data = request.get_json()
+    task.title = data['title']
+    task.description = data['description']
+    task.completed = data['completed']
+
+    return jsonify({'message': 'Tarefa atualizada com sucesso'})
 
 # DELETE
-        
-def generate_random_ids(num_ids, min_value=1, max_value=9999):
-    return [random.randint(min_value, max_value) for _ in range(num_ids)]
-
 
 if __name__ == '__main__':
     app.run(debug=True)
