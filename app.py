@@ -1,5 +1,5 @@
-from flask import Flask, jsonify
-
+from flask import Flask, jsonify, request
+from models.task import Task
 
 app = Flask(__name__)
 
@@ -9,11 +9,27 @@ def hello_world():
         'message': 'API is running!'
     })
 
-@app.route('/about')
-def about():
+tasks = []
+task_id_control = 1
+
+#CREATE
+@app.route('/tasks', methods=['POST'])
+def create_task():
+    global task_id_control
+    data = request.get_json()
+    new_task = Task(id=task_id_control, title=data['title'], description=data.get("description", ""))
+    tasks.append(new_task)
+    print(tasks)
     return jsonify({
-        'message': 'About Page'
+        'message': 'Nova tarefa criada com sucesso'
     })
+
+#READ
+
+#UPDATE
+
+#DELETE
+
 
 if __name__ == '__main__':
     app.run(debug=True)
